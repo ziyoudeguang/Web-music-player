@@ -3,7 +3,7 @@
 一个纯前端 + 轻量 PHP 后端的网页音乐播放器。前端为单文件 `index.html`（无需构建、无依赖），后端提供两个接口：扫描服务器音乐目录生成歌单、按需获取歌词，播放时浏览器直接流式请求音频文件。
 
 ## 效果图片
-演示网站：https://music.ziyoudeguang.cn，网站有时会关闭，因为服务器是我家的一台电脑，一般开启时间为9：00-22：00
+演示网站：https://music.ziyoudeguang.cn ，网站有时会关闭，因为服务器是我家的一台电脑，一般开启时间为9：00-22：00
 
 <img width="1918" height="924" alt="01019e618be23e34da6e25f9e9f5c688" src="https://github.com/user-attachments/assets/87d61bdd-7bb5-42c2-8a41-bbc4a137400b" />
 
