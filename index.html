@@ -713,6 +713,7 @@
             <div class="copyright">
                 代码由DeepSeek×Claude生成，官网：<a href="https://www.deepseek.com/" target="_blank">https://www.deepseek.com/</a>
                 <a href="https://claude.ai/" target="_blank">https://claude.ai/</a>
+                <br>本网页是开源项目，欢迎访问仓库：<a href="https://github.com/ziyoudeguang/Web-music-player" target="_blank">ziyoudeguang/Web-music-player: 一个能在网页端播放音乐的东西</a>
             </div>
         </div>
 
@@ -742,7 +743,7 @@
 
     <script>
         (function() {
-            const API_URL = 'http://将我改成你绑定的域名或IP或其他能访问进来的喵/music_list.php';
+            const API_URL = 'https://将我改成你绑定的域名或IP或其他能访问进来的喵/music_list.php';
             //API的协议自行更改，如果没有部署SSL就改成http，反之改成https
             // DOM 元素
             const audio = document.getElementById('mainAudio');
@@ -1001,7 +1002,7 @@
             async function loadLyrics(musicUrl) {
                 try {
                     const musicFileName = decodeURIComponent(musicUrl.split('/').pop());
-                    const apiUrl = `http://将我改成你绑定的域名或IP或其他能访问进来的喵/get_lrc.php?file=${encodeURIComponent(musicFileName)}`;
+                    const apiUrl = `https://将我改成你绑定的域名或IP或其他能访问进来的喵/get_lrc.php?file=${encodeURIComponent(musicFileName)}`;
                     //API的协议自行更改，如果没有部署SSL就改成http，反之改成https
                     log('加载歌词API:', apiUrl);
                     
@@ -1260,13 +1261,13 @@
             // 开始缓冲（卡顿）
             audio.addEventListener('waiting', function() {
                 bufferingIndicator.classList.add('show');
-                log('缓冲中... (音频数据加载慢)');
+                log('缓冲中...');
 
-                // 如果缓冲超过 50 秒还没恢复，自动切到下一首
+                // 如果缓冲超过 5 秒还没恢复，自动切到下一首
                 if (bufferTimeout) clearTimeout(bufferTimeout);
                 bufferTimeout = setTimeout(function() {
                     if (bufferingIndicator.classList.contains('show')) {
-                        log('缓冲超时 (50秒)，自动切换下一首');
+                        log('缓冲超时 (5秒)，自动切换下一首');
                         if (playlist.length > 1) {
                             autoNextTrack();
                         } else {
@@ -1315,6 +1316,38 @@
                 toggleDebugBtn.textContent = debugEl.classList.contains('hidden') ? '显示调试信息' : '隐藏调试信息';
             });
 
+            // ========== 检测浏览器开发者工具是否已打开（彩蛋提示） ==========
+            // 计数只存在内存里，刷新页面即重置为 0
+            let devToolsOpenCount = 0;
+            function handleDevToolsOpened() {
+                devToolsOpenCount++;
+                const count = devToolsOpenCount;
+                if (count === 1) {
+                    alert('不要调试我！！(•̀ᗝ•́)💢');
+                } else if (count >= 2 && count <= 5) {
+                    alert('讨厌，不要扒我皮，人家会害羞的！(⁄ ⁄>⁄◡⁄<⁄ ⁄)');
+                } else if (count === 6) {
+                    alert('坏蛋！人家底裤都要被你看光了！꒰ ⸝⸝ > ﹏ < ⸝⸝ ꒱');
+                }
+                // 第六次及以后不再提示
+            }
+            (function() {
+                const timeLimit = 100; // 判定阈值（毫秒）：暂停耗时超过此值视为调试工具已打开
+                const timer = setInterval(function() {
+                    const startTime = new Date();
+                    debugger;
+                    const cost = new Date() - startTime;
+                    if (cost > timeLimit) {
+                        // 只要还是打开状态，每次检测循环都继续弹窗，直到用户关闭调试工具
+                        handleDevToolsOpened();
+                        // 第六次弹窗之后，彻底停止检测循环（不再执行 debugger），放行调试
+                        if (devToolsOpenCount >= 6) {
+                            clearInterval(timer);
+                        }
+                    }
+                }, 500);
+            })();
+
             // 快捷键
             document.addEventListener('keydown', function(e) {
                 if (e.code === 'Space') {
@@ -1349,6 +1382,21 @@
             // 启动
             loadPlaylist();
         })();
+    </script>
+    <script>
+        // 控制台彩蛋
+        const easterEgg = `I'm drowning in the night, when I'm like this you're the one I trust.
+    “我沉溺于夜色、而你是我唯一的归宿。” ——The Weeknd《Blinding Lights》
+        ⣾⡇⣿⣿⡇⣾⣿⣿⣿⣿⣿⣿⣿⣿⣄⢻⣦⡀⠁⢸⡌⠻⣿⣿⣿⡽⣿⣿
+        ⡇⣿⠹⣿⡇⡟⠛⣉⠁⠉⠉⠻⡿⣿⣿⣿⣿⣿⣦⣄⡉⠂⠈⠙⢿⣿⣝⣿
+        ⠤⢿⡄⠹⣧⣷⣸⡇⠄⠄⠲⢰⣌⣾⣿⣿⣿⣿⣿⣿⣶⣤⣤⡀⠄⠈⠻⢮
+        ⠄⢸⣧⠄⢘⢻⣿⡇⢀⣀⠄⣸⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⡀⠄⢀
+        ⠄⠈⣿⡆⢸⣿⣿⣿⣬⣭⣴⣿⣿⣿⣿⣿⣿⣿⣯⠝⠛⠛⠙⢿⡿⠃⠄⢸
+        ⠄⠄⢿⣿⡀⣿⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣷⣿⣿⣿⣿⡾⠁⢠⡇⢀
+        ⠄⠄⢸⣿⡇⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣏⣫⣻⡟⢀⠄⣿⣷⣾
+        ⠄⠄⢸⣿⡇⠄⠈⠙⠿⣿⣿⣿⣮⣿⣿⣿⣿⣿⣿⣿⣿⡿⢠⠊⢀⡇⣿⣿
+        ⠒⠤⠄⣿⡇⢀⡲⠄⠄⠈⠙⠻⢿⣿⣿⠿⠿⠟⠛⠋⠁⣰⠇⠄⢸⣿⣿⣿`;
+        console.log(easterEgg);
     </script>
 </body>
 </html>
