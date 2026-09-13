@@ -35,13 +35,13 @@
 
 **1. 解压压缩包到网站目录**
 
-**2. 打开 `index.html`，更改第 745 行的歌曲列表 API 的 URL**
+**2. 打开 `index.html`，更改第 746 行的歌曲列表 API 的 URL**
 
-在文件中搜索 `const API_URL`：
+在文件中搜索 `const API_URL`：（代码在第746行，图片没更新）
 
 <img width="939" height="279" alt="API_URL 位置示意图" src="https://github.com/user-attachments/assets/7047f03b-79f0-48e4-972f-769445b76aa3" />
 
-再更改第 1004 行的歌词 API 的 URL，搜索 `const apiUrl`：
+再更改第 1005 行的歌词 API 的 URL，搜索 `const apiUrl`：（代码在第1005行，图片没更新）
 
 <img width="917" height="271" alt="apiUrl 位置示意图" src="https://github.com/user-attachments/assets/f47d97c1-a739-4f71-865a-1060cafb8cb2" />
 
