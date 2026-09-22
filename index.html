@@ -800,6 +800,69 @@
             let scrollTimer = null;
             let userScrollY = 0;
 
+            // ---------- Media Session（灵动岛/系统媒体控制）目前仅支持edge和chorme，safari不清楚----------
+            if ('mediaSession' in navigator) {
+              // 更新灵动岛显示的歌名/歌手/封面
+               function updateMediaSession() {
+                const title = songTitle.textContent.replace(/FLAC\/MP3$/, '').trim();
+                const artist = songArtist.textContent.trim();
+
+                // 尝试从封面 div 的背景图里取图片地址（没有就不传 artwork）
+                let artwork = [];
+                const bg = albumCover.style.backgroundImage;
+                const match = bg && bg.match(/url\(["']?(.*?)["']?\)/);
+                if (match && match[1]) {
+                  artwork = [{ src: match[1], sizes: '512x512', type: 'image/png' }];
+                }
+
+                navigator.mediaSession.metadata = new MediaMetadata({
+                  title: title || '未知歌曲',
+                  artist: artist || '未知艺术家',
+                  album: '音乐播放器',
+                  artwork: artwork
+                });
+              }
+
+              // 播放状态同步
+              audio.addEventListener('play', () => {
+                navigator.mediaSession.playbackState = 'playing';
+                updateMediaSession();
+              });
+              audio.addEventListener('pause', () => {
+                navigator.mediaSession.playbackState = 'paused';
+              });
+              // 每次换歌（src 变化触发 loadedmetadata）也刷新一次
+              audio.addEventListener('loadedmetadata', updateMediaSession);
+
+              // 播放/暂停按钮
+              navigator.mediaSession.setActionHandler('play', () => audio.play());
+              navigator.mediaSession.setActionHandler('pause', () => audio.pause());
+
+              // 上一首/下一首：直接复用页面里已有的按钮点击逻辑
+              navigator.mediaSession.setActionHandler('previoustrack', () => prevBtn.click());
+              navigator.mediaSession.setActionHandler('nexttrack', () => nextBtn.click());
+
+              // 进度条拖动（可选，锁屏卡片支持的话可以拖）
+              navigator.mediaSession.setActionHandler('seekto', (details) => {
+                if (details.seekTime !== undefined) audio.currentTime = details.seekTime;
+              });
+            }
+
+            // ---------- 歌词同步到灵动岛（实质是把显示歌手的地方也就是副标题给换成了显示歌词的功能区） ----------
+            let lastMediaLyricIndex = -1;
+
+            function updateMediaSessionLyric(activeIndex) {
+              if (!('mediaSession' in navigator) || !navigator.mediaSession.metadata) return;
+              if (activeIndex === lastMediaLyricIndex) return; // 歌词没变就不刷新，减少闪烁
+              lastMediaLyricIndex = activeIndex;
+
+              const lyricText = (currentLyrics[activeIndex] && currentLyrics[activeIndex].text)
+                ? currentLyrics[activeIndex].text
+                : songArtist.textContent.trim();
+
+              navigator.mediaSession.metadata.artist = lyricText; // 用"歌手"这一行显示当前歌词
+            }
+
             // ---------- 拖拽功能（右侧）----------
             let isResizing = false;
             let startX = 0;
@@ -955,6 +1018,7 @@
                 lyricsList.style.transform = 'translateY(0)';
                 userScrollY = 0;
                 manualScroll = false;
+                lastMediaLyricIndex = -1;//把 lastMediaLyricIndex 重置，避免新歌开头显示上一首的残留歌词
                 if (scrollTimer) {
                     clearTimeout(scrollTimer);
                     scrollTimer = null;
@@ -963,7 +1027,6 @@
 
             function updateLyrics(currentTime) {
                 if (!currentLyrics || currentLyrics.length === 0) return;
-
                 let activeIndex = -1;
                 for (let i = 0; i < currentLyrics.length; i++) {
                     if (currentTime >= currentLyrics[i].time) {
@@ -972,8 +1035,8 @@
                         break;
                     }
                 }
-
                 if (activeIndex === -1) return;
+                updateMediaSessionLyric(activeIndex);//歌词同步到灵动岛
 
                 const items = lyricsList.querySelectorAll('li');
                 items.forEach((item, idx) => {
