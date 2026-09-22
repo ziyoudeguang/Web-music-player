@@ -104,6 +104,7 @@
 ## 灵动岛
 
 - 灵动岛目前仅支持edge浏览器和google chorme的手机浏览器，苹果的safari暂不清楚
+[最新版下载](https://github.com/ziyoudeguang/Web-music-player/releases)
 下面是我的小米14（澎湃OS3.0.303.0）的演示图：
 
 收起灵动岛样式：
@@ -123,7 +124,7 @@
 
 ## 电脑播放界面
 
-现在部署最新的版本即可在windoes电脑调节音量时显示音乐名字，实时歌词等信息，功能有暂停，上一首，下一首，图示如下：
+现在部署[最新的版本](https://github.com/ziyoudeguang/Web-music-player/releases)即可在windoes电脑调节音量时显示音乐名字，实时歌词等信息，功能有暂停，上一首，下一首，图示如下：
 <img width="512" height="151" alt="0adb9929647cc778bf4147a5833569fc" src="https://github.com/user-attachments/assets/a85df88e-f588-4de9-a820-9a7309a07600" />
 - 系统要求：windoes 10及以上
 
