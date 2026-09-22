@@ -100,6 +100,34 @@
 | `format` | 大写的文件扩展名，如 `MP3`/`FLAC` |
 | `filename` | 原始文件名（含扩展名），用于请求歌词接口等 |
 
+
+## 灵动岛
+
+- 灵动岛目前仅支持edge浏览器和google chorme的手机浏览器，苹果的safari暂不清楚
+下面是我的小米14（澎湃OS3.0.303.0）的演示图：
+
+收起灵动岛样式：
+<img width="1200" height="267" alt="cf946d0f4797725471bcd61f11882766" src="https://github.com/user-attachments/assets/b6a8156c-e18c-448a-8327-ddea46b1957d" />
+展开灵动岛样式：
+<img width="1200" height="897" alt="6ef608783f651c583dd63f5bb2ea03e0" src="https://github.com/user-attachments/assets/9ef65f95-9884-499a-a4cf-bd1bcc8e805c" />
+
+系统（软/硬件）要求：
+*除苹果和google手机外，其余的系统自带浏览器均不支持上岛
+- 苹果 —— 灵动岛：硬件要求：iPhone 14 Pro / 14 Pro Max 起的所有 Pro 系列，以及 iPhone 15 起的非 Pro 系列（15、15 Plus、16、16 Plus、17 等）。系统要求： iOS 16.1 及以上。
+- 荣耀 —— 灵动胶囊：系统要求 MagicOS 8.0 及以上（部分新机已是 MagicOS 9.0/10.0）。
+- vivo —— 原子通知 / 原子岛：支持情况尚不清楚
+- 华为 —— 实况窗：系统自带浏览器不支持上岛，系统要求：HarmonyOS 4.0及以上
+- 小米 —— 超级岛：澎湃OS 3及以上，17pro及以上有妙想背屏功能的尚不清楚能不能上背屏
+- Android：Android16+
+- OPPO / 三星 / 魅族及其他机型：支持情况尚不清楚
+
+## 电脑播放界面
+
+现在部署最新的版本即可在windoes电脑调节音量时显示音乐名字，实时歌词等信息，功能有暂停，上一首，下一首，图示如下：
+<img width="512" height="151" alt="0adb9929647cc778bf4147a5833569fc" src="https://github.com/user-attachments/assets/a85df88e-f588-4de9-a820-9a7309a07600" />
+- 系统要求：windoes 10及以上
+
+
 ## 前端说明（`index.html`）
 
 - 播放器只依赖浏览器原生 `<audio>` 元素和原生 JS，未使用任何第三方框架或 CDN 资源，打开即用
