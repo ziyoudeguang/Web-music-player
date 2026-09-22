@@ -9,6 +9,7 @@
 
 ## 功能特性
 
+- 在使用edge和chorme浏览器时播放器支持灵动岛！还有实时歌词显示！
 - 🎧 自动扫描服务器 `music/` 目录，支持 `mp3`、`flac`、`wav`、`m4a`、`ogg`
 - 📋 右侧可拖拽宽度、可展开/收起的歌单列表
 - 🔍 歌单内置搜索框，随歌单展开/收起一起显示或隐藏，可按歌名/歌手实时过滤
@@ -17,6 +18,7 @@
 - 🔊 音量调节、播放进度、缓冲卡顿检测（缓冲超时自动切下一首）
 - ⌨️ 快捷键支持
 - 🐞 内置调试信息面板，方便排查加载/播放问题
+- 在使用edge和chorme浏览器时播放器支持灵动岛！还有实时歌词显示！
 
 ## 项目结构
 
@@ -35,13 +37,13 @@
 
 **1. 解压压缩包到网站目录**
 
-**2. 打开 `index.html`，更改第 745 行的歌曲列表 API 的 URL**
+**2. 打开 `index.html`，更改第 746 行的歌曲列表 API 的 URL**
 
-在文件中搜索 `const API_URL`：
+在文件中搜索 `const API_URL`：（代码在第746行，图片没更新）
 
 <img width="939" height="279" alt="API_URL 位置示意图" src="https://github.com/user-attachments/assets/7047f03b-79f0-48e4-972f-769445b76aa3" />
 
-再更改第 1004 行的歌词 API 的 URL，搜索 `const apiUrl`：（代码在第1004行，图片没更新）
+再更改第 1068 行的歌词 API 的 URL，搜索 `const apiUrl`：（代码在第1068行，图片没更新）
 
 <img width="917" height="271" alt="apiUrl 位置示意图" src="https://github.com/user-attachments/assets/f47d97c1-a739-4f71-865a-1060cafb8cb2" />
 
