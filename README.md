@@ -47,7 +47,38 @@
 
 把这两个按照下面的部署方式填写到`const API_URL`和`const apiUrl`
 
-## 部署方式
+## v1.2.3 及以后版本部署方式
+
+**本地部署**
+
+1.下载最新版：[点击进入下载页面](https://github.com/ziyoudeguang/Web-music-player/releases)
+
+2.下载PHP（需要版本大于等于7.0），PHP官网：[PHP](https://www.php.net)
+
+3.解压
+
+4.使用
+
+**服务器部署（推荐使用宝塔面板）**
+
+**以宝塔windoes面板为例**
+
+1.点击`网站`，点击`新建站点`
+
+2.把你的域名填进去，更改程序类型为`PHP`，版本选择7.0以上即可，其他按需要设置
+
+<img width="795" height="623" alt="QQ_1795322187661" src="https://github.com/user-attachments/assets/2d4652e2-bd2e-42e9-939e-cf1383f05af4" />
+
+3.打开你的网站根目录，下载[最新版](https://github.com/ziyoudeguang/Web-music-player/releases)，解压到你的网站根目录
+
+4.添加你喜欢的歌曲和歌词`lrc`文件，然后开始使用！
+
+
+
+
+## v1.2.2及以前的版本部署方式
+
+**从v1.2.3及以后的版本，已经不用在修改`index.html`中`const API_URL`和`const apiUrl`了，所以此部署方式仅适用v1.2.2及以前的版本，v1.2.3及以后的直接下载解压到网站目录就行**
 
 **为什么部署后放音乐文件没有显示？因为你没有看下面的教程来改代码，你的音乐列表和歌词API没有改**
 
