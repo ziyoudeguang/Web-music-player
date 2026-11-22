@@ -9,6 +9,7 @@
 
 <img width="1920" height="925" alt="2bfa003e87486b52b07c6b75edc88ebf" src="https://github.com/user-attachments/assets/1dd4b94d-3e0e-4497-9073-400323ce1dcd" />
 
+不只一个颜色！是会变的！
 你可以下载[最新版](https://github.com/ziyoudeguang/Web-music-player/releases)，里面有几个其他版本的界面，供你自由选择
 ## 功能特性
 
