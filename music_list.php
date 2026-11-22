@@ -35,7 +35,7 @@ $getid3_file = __DIR__ . '/getid3/getid3.php';
 if (file_exists($getid3_file)) {
     require_once $getid3_file;
     $getID3 = new getID3;
-    $getID3->option_tags_images = false; // 歌单里不提取封面图片数据，加快速度
+    $getID3->option_save_attachments = getID3::ATTACHMENTS_NONE; // 歌单里不读取封面图片数据，加快速度
 }
 
 // 扫描目录获取所有文件

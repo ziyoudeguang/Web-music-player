@@ -441,6 +441,51 @@
             background: #e2e8f0;
         }
 
+        /* 刷新按钮：位于标题与折叠三角之间，靠近三角 */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .refresh-btn {
+            background: #f1f5f9;
+            border: 1px solid rgba(255,255,255,0.7);
+            height: 28px;
+            min-width: 28px;
+            padding: 0 8px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #475569;
+            transition: 0.2s;
+        }
+        .refresh-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+        }
+        .refresh-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        .refresh-btn .refresh-icon {
+            display: inline-flex;
+            align-items: center;
+        }
+        .refresh-btn.loading .refresh-icon {
+            animation: refresh-spin 1.2s ease-in-out 1;
+        }
+        .refresh-btn .cooldown-text {
+            font-size: 11px;
+            font-weight: 600;
+        }
+        @keyframes refresh-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(720deg); }
+        }
+
         .playlist-items {
             list-style: none;
             overflow-y: auto;
@@ -538,6 +583,10 @@
 
         .playlist-container.collapsed .playlist-header {
             justify-content: center;
+        }
+
+        .playlist-container.collapsed .refresh-btn {
+            display: none;
         }
 
         .playlist-container.collapsed .toggle-playlist {
@@ -722,7 +771,10 @@
             <div class="resize-handle" id="resizeHandle"></div>
             <div class="playlist-header">
                 <h3>📋 歌单列表 <span id="playlistCount">0</span> <span class="search-icon-toggle"> </span></h3>
-                <button class="toggle-playlist" id="togglePlaylistBtn" title="展开/收起列表">◀</button>
+                <div class="header-actions">
+                    <button class="refresh-btn" id="refreshBtn" title="刷新歌单和歌词"><span class="refresh-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><polyline points="21 3 21 9 15 9"/></svg></span><span class="cooldown-text" id="refreshCooldown"></span></button>
+                    <button class="toggle-playlist" id="togglePlaylistBtn" title="展开/收起列表">◀</button>
+                </div>
             </div>
             <!-- 搜索框：随歌单展开出现，收起隐藏 -->
             <div class="playlist-search" id="playlistSearch">
@@ -743,7 +795,7 @@
 
     <script>
         (function() {
-            const API_URL = 'https://将我改成你绑定的域名或IP或其他能访问进来的喵/music_list.php';
+            const API_URL = 'music_list.php';
             //API的协议自行更改，如果没有部署SSL就改成http，反之改成https
             // DOM 元素
             const audio = document.getElementById('mainAudio');
@@ -1065,7 +1117,7 @@
             async function loadLyrics(musicUrl) {
                 try {
                     const musicFileName = decodeURIComponent(musicUrl.split('/').pop());
-                    const apiUrl = `https://将我改成你绑定的域名或IP或其他能访问进来的喵/get_lrc.php?file=${encodeURIComponent(musicFileName)}`;
+                    const apiUrl = `get_lrc.php?file=${encodeURIComponent(musicFileName)}`;
                     //API的协议自行更改，如果没有部署SSL就改成http，反之改成https
                     log('加载歌词API:', apiUrl);
                     
@@ -1220,6 +1272,29 @@
                 });
             }
 
+            // 续播相关状态：播放到一半出错时，从原位置续播，而不是回到开头
+            let lastGoodTime = 0;   // 最近一次正常播放到的位置（秒）
+            let resumeTries = 0;    // 当前歌曲已尝试续播的次数
+            let pendingResume = 0;  // 等待元数据加载完成后要跳转的位置（秒）
+
+            // 加载封面：有封面就显示；没有封面（接口返回 404）就保留默认渐变底色
+            function setCover(url) {
+                albumCover.dataset.cover = url || '';
+                if (!url) return;
+                const img = new Image();
+                img.onload = function() {
+                    // 快速切歌时，丢弃已经过期的封面，避免旧封面盖住新封面
+                    if (albumCover.dataset.cover !== url) return;
+                    albumCover.style.backgroundImage = 'url("' + url.replace(/"/g, '%22') + '")';
+                    // 让灵动岛/系统媒体卡片也拿到封面
+                    if (typeof updateMediaSession === 'function') updateMediaSession();
+                };
+                img.onerror = function() {
+                    log('这首歌没有封面');
+                };
+                img.src = url;
+            }
+
             function loadTrack(index) {
                 if (!playlist.length || index < 0 || index >= playlist.length) {
                     log('无效索引:', index);
@@ -1227,12 +1302,15 @@
                 }
                 const track = playlist[index];
                 log('加载歌曲:', track.title, track.url);
+                lastGoodTime = 0; resumeTries = 0; pendingResume = 0;
                 audio.src = track.url;
                 audio.type = (track.format === 'FLAC') ? 'audio/flac' : 'audio/mpeg';
                 songTitle.innerHTML = `${track.title} <span>${track.format}</span>`;
                 songArtist.textContent = track.artist || '未知艺术家';
                 const colors = ['#a5b4cb', '#b8a9c9', '#c9b6a9', '#a9c9b6', '#f0c4a8'];
-                albumCover.style.background = `linear-gradient(145deg, ${colors[index % colors.length]}, ${colors[(index+1) % colors.length]}dd)`;
+                // 先显示默认渐变底色，再尝试加载真正的封面
+                albumCover.style.backgroundImage = `linear-gradient(145deg, ${colors[index % colors.length]}, ${colors[(index+1) % colors.length]}dd)`;
+                setCover(track.cover);
                 currentIndex = index;
                 renderPlaylist();
                 loadLyrics(track.url);
@@ -1241,15 +1319,6 @@
                 if (playPromise !== undefined) {
                     playPromise.catch(err => log('自动播放失败:', err.message));
                 }
-                audio.onerror = function(e) {
-                    log('音频加载错误:', audio.error ? audio.error.message : '未知错误');
-                    if (playlist.length > 1) {
-                        setTimeout(() => {
-                            log('尝试播放下一首');
-                            autoNextTrack();
-                        }, 1000);
-                    }
-                };
             }
 
             async function loadPlaylist() {
@@ -1284,6 +1353,68 @@
                     loadingMsg.textContent = '❌ 加载失败';
                 }
             }
+
+            // ---------- 刷新歌单和歌词（冷却 5 秒） ----------
+            const refreshBtn = document.getElementById('refreshBtn');
+            const refreshCooldown = document.getElementById('refreshCooldown');
+            const REFRESH_COOLDOWN = 5;
+            let refreshBusy = false;
+
+            function startRefreshCooldown() {
+                let left = REFRESH_COOLDOWN;
+                refreshBtn.disabled = true;
+                refreshCooldown.textContent = left + 's';
+                const timer = setInterval(() => {
+                    left--;
+                    if (left <= 0) {
+                        clearInterval(timer);
+                        refreshBtn.disabled = false;
+                        refreshCooldown.textContent = '';
+                    } else {
+                        refreshCooldown.textContent = left + 's';
+                    }
+                }, 1000);
+            }
+
+            async function refreshAll() {
+                if (refreshBusy || refreshBtn.disabled) return;
+                refreshBusy = true;
+                refreshBtn.classList.add('loading');
+                refreshBtn.querySelector('.refresh-icon').addEventListener('animationend', () => {
+                    refreshBtn.classList.remove('loading');
+                }, { once: true });
+                startRefreshCooldown();
+                log('手动刷新歌单和歌词');
+                try {
+                    const response = await fetch(API_URL, { cache: 'no-store' });
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+                    if (data.error) throw new Error(data.error);
+                    const newList = data.music || [];
+                    if (newList.length === 0) {
+                        loadingMsg.textContent = '❌ 没有找到音乐文件';
+                        return;
+                    }
+                    // 不打断当前播放：按 url 定位当前歌曲在新列表中的位置
+                    const currentUrl = (playlist[currentIndex] || {}).url;
+                    playlist = newList;
+                    const newIdx = playlist.findIndex(t => t.url === currentUrl);
+                    if (newIdx >= 0) currentIndex = newIdx;
+                    const formats = [...new Set(playlist.map(s => s.format))].join('/');
+                    trackBadge.textContent = formats;
+                    totalSongs.textContent = playlist.length;
+                    loadingMsg.textContent = `✅ 找到 ${playlist.length} 首音乐`;
+                    renderPlaylist();
+                    log('歌单刷新成功', playlist.length + '首');
+                    if (currentUrl) loadLyrics(currentUrl);
+                } catch (error) {
+                    log('刷新失败:', error.message);
+                    loadingMsg.textContent = '❌ 刷新失败';
+                } finally {
+                    refreshBusy = false;
+                }
+            }
+            refreshBtn.addEventListener('click', refreshAll);
 
             function log(message, data = '') {
                 const time = new Date().toLocaleTimeString();
@@ -1360,7 +1491,22 @@
                 }
             });
 
-            // 播放失败时自动尝试下一首
+            // 记录最近一次正常的播放位置
+            audio.addEventListener('timeupdate', function() {
+                if (audio.currentTime > 0) lastGoodTime = audio.currentTime;
+            });
+
+            // 元数据加载完成后，如果有待续播的位置，就跳过去继续播放
+            audio.addEventListener('loadedmetadata', function() {
+                if (pendingResume > 0) {
+                    const p = pendingResume;
+                    pendingResume = 0;
+                    try { audio.currentTime = p; } catch (e) { log('续播跳转失败:', e.message); }
+                    audio.play().catch(err => log('续播失败:', err.message));
+                }
+            });
+
+            // 播放失败：播到一半出错时先原位续播（最多 2 次），仍失败再自动切歌
             audio.addEventListener('error', function(e) {
                 log('音频错误:', audio.error ? audio.error.message : '未知');
                 bufferingIndicator.classList.remove('show');
@@ -1368,8 +1514,18 @@
                     clearTimeout(bufferTimeout);
                     bufferTimeout = null;
                 }
-                // 自动切歌
+                const track = playlist[currentIndex];
+                if (track && lastGoodTime > 3 && resumeTries < 2) {
+                    resumeTries++;
+                    pendingResume = lastGoodTime;
+                    log('播放中断，尝试从 ' + Math.floor(pendingResume) + ' 秒处续播（第 ' + resumeTries + ' 次）');
+                    audio.src = track.url;
+                    return;
+                }
+                // 续播多次仍失败：自动切歌
+                pendingResume = 0;
                 if (playlist.length > 1) {
+                    log('续播失败，自动切换歌曲');
                     setTimeout(autoNextTrack, 1000);
                 }
             });
