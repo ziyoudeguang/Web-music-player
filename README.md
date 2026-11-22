@@ -7,7 +7,8 @@
 ## 效果图片
 演示网站：https://music.ziyoudeguang.cn ，网站有时会关闭，因为服务器是我家的一台电脑，一般开启时间为9：00-22：00
 
-<img width="1918" height="924" alt="01019e618be23e34da6e25f9e9f5c688" src="https://github.com/user-attachments/assets/87d61bdd-7bb5-42c2-8a41-bbc4a137400b" />
+<img width="1920" height="925" alt="2bfa003e87486b52b07c6b75edc88ebf" src="https://github.com/user-attachments/assets/1dd4b94d-3e0e-4497-9073-400323ce1dcd" />
+
 
 ## 功能特性
 
