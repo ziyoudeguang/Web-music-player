@@ -49,6 +49,10 @@
 
 ## v1.2.3 及以后版本部署方式
 
+**使用v1.2.3的股东的PHP务必是大于等于7.0并且小于8.2的！大于8.2的版本会产生警告信息，混进 JSON 里导致歌单加载失败！**
+
+解决方法：把`music_list.php`中的```$getID3->option_tags_images = false;```修改成```$getID3->option_save_attachments = getID3::ATTACHMENTS_NONE;```
+
 **本地部署**
 
 1.下载最新版：[点击进入下载页面](https://github.com/ziyoudeguang/Web-music-player/releases)
