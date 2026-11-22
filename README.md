@@ -31,6 +31,16 @@
 └── musiclrc/             # 音乐歌词文件存放目录（自行放入 .lrc 歌词文件）
 ```
 
+## 项目由来
+
+**我在上初三的时候，上微机课还有英语听说练习（计入中考分，是电脑答卷），上课很无聊，老师讲的对我来说就像1+1＝2，想玩游戏还要登录，听歌也要登录和会员，所以我就干脆自己整了个网站，每次上微机课的早上就在家里把服务器开着，等上课的时候访问我的网站就能听歌了**
+
+## API接口
+
+**我提供的API能不能用看我啥时候开服务器（本质就是我家的另一台电脑），所以还是推荐你自己整API**
+**音乐API：https://music.ziyoudeguang.cn/music_list.php**
+**音乐歌词API：https://music.ziyoudeguang.cn/get_lrc.php?file=${encodeURIComponent(musicFileName)}**
+把这两个按照下面的部署方式填写到`const API_URL`和`const apiUrl`
 ## 部署方式
 
 **为什么部署后放音乐文件没有显示？因为你没有看下面的教程来改代码，你的音乐列表和歌词API没有改**
@@ -41,11 +51,11 @@
 
 **2. 打开 `index.html`，更改第 746 行的歌曲列表 API 的 URL**
 
-在文件中搜索 `const API_URL`：（代码在第746行，图片没更新）
+在文件中搜索 `const API_URL`：（代码在第798行，图片没更新）
 
 <img width="939" height="279" alt="API_URL 位置示意图" src="https://github.com/user-attachments/assets/7047f03b-79f0-48e4-972f-769445b76aa3" />
 
-再更改第 1068 行的歌词 API 的 URL，搜索 `const apiUrl`：（代码在第1068行，图片没更新）
+再更改第 1068 行的歌词 API 的 URL，搜索 `const apiUrl`：（代码在第1120行，图片没更新）
 
 <img width="917" height="271" alt="apiUrl 位置示意图" src="https://github.com/user-attachments/assets/f47d97c1-a739-4f71-865a-1060cafb8cb2" />
 
