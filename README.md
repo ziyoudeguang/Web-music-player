@@ -38,9 +38,13 @@
 ## API接口
 
 **我提供的API能不能用看我啥时候开服务器（本质就是我家的另一台电脑），所以还是推荐你自己整API**
+
 **音乐API：https://music.ziyoudeguang.cn/music_list.php**
+
 **音乐歌词API：https://music.ziyoudeguang.cn/get_lrc.php?file=${encodeURIComponent(musicFileName)}**
+
 把这两个按照下面的部署方式填写到`const API_URL`和`const apiUrl`
+
 ## 部署方式
 
 **为什么部署后放音乐文件没有显示？因为你没有看下面的教程来改代码，你的音乐列表和歌词API没有改**
