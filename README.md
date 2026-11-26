@@ -164,12 +164,18 @@
 
 - 灵动岛目前仅支持edge浏览器和google chorme的手机浏览器，苹果的safari暂不清楚
 [最新版下载](https://github.com/ziyoudeguang/Web-music-player/releases)
-下面是我的小米14（澎湃OS3.0.303.0）的演示图：
+下面是我的小米14（澎湃OS3.0.303.0）的演示图：（一张是音乐文件有封面，一张没有）
 
 收起灵动岛样式：
 <img width="1200" height="267" alt="cf946d0f4797725471bcd61f11882766" src="https://github.com/user-attachments/assets/b6a8156c-e18c-448a-8327-ddea46b1957d" />
+
+<img width="1200" height="267" alt="0f3acb0a4793235bcaa29f54b9c856ed" src="https://github.com/user-attachments/assets/33e9de40-8d15-427b-9ef3-282914e28639" />
+
 展开灵动岛样式：
 <img width="1200" height="897" alt="6ef608783f651c583dd63f5bb2ea03e0" src="https://github.com/user-attachments/assets/9ef65f95-9884-499a-a4cf-bd1bcc8e805c" />
+
+<img width="1200" height="780" alt="9e8274700f1f2b9270d7ef82ab8d4f23" src="https://github.com/user-attachments/assets/cf4d65d0-2cf0-4026-8531-29d948a9c481" />
+
 
 系统（软/硬件）要求：
 *除苹果和google手机外，其余的系统自带浏览器均不支持上岛
